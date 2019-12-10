@@ -369,14 +369,14 @@ public class LoginController {
 	@GetMapping(value = "/getCheckCode")
 	public Result<Map<String,String>> getCheckCode(){
 		Result<Map<String,String>> result = new Result<Map<String,String>>();
-		Map<String,String> map = new HashMap<String,String>();
 		try {
 			String code = RandomUtil.randomString(BASE_CHECK_CODES,4);
 			String key = MD5Util.MD5Encode(code+System.currentTimeMillis(), "utf-8");
 			redisUtil.set(key, code, 60);
-			map.put("key", key);
-			map.put("code",code);
-			result.setResult(map);
+			result.setResult(new HashMap<String,String>(){{
+				put("key", key);
+				put("code",code);
+			}});
 			result.setSuccess(true);
 		} catch (Exception e) {
 			e.printStackTrace();
